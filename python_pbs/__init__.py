@@ -1,1 +1,1 @@
-from extensions import *
+from .extensions import *
