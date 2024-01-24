@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "python-pbs"
+version = "0.1.0"
+description = "Modern Python wrapper around OpenPBS"
+authors = ["Dax Harris <dharr@lle.rochester.edu>"]
+license = "MIT"
+readme = "README.md"
+include = [
+    {path = "**/*.so", format = ["sdist", "wheel"]}
+]
+exclude = [
+    {path = "build/*"}
+]
+
+[tool.poetry.build]
+script = "make.py"
+generate-setup-file = true
+
+[tool.poetry.dependencies]
+python = "^3.11"
+setuptools = "^69.0.3"
+
+
+[build-system]
+requires = ["poetry-core", "setuptools"]
+build-backend = "poetry.core.masonry.api"
