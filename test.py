@@ -1,5 +1,4 @@
-from python_pbs import connect, stat_queue, stat_server
+from python_pbs import PBS
 
-c = connect()
-print(stat_queue(c))
-print(stat_server(c))
+pbs = PBS()
+print(pbs.status)
