@@ -392,7 +392,7 @@ def stat_free(status: list[BatchStatus]) -> None:
 
 def stat_job(
     connection_id: int, id: Optional[str] = "", attributes: list[Attribute] = []
-) -> list[BatchStatus]:
+) -> list[dict]:
     """Get status of job(s)
 
     Args:
@@ -401,16 +401,14 @@ def stat_job(
         attributes (list[Attribute], optional): List of filter attributes. Defaults to None.
 
     Returns:
-        list[BatchStatus]: List of statuses
+        list[dict]: List of statuses
     """
-    return BatchStatus.from_batch_status(
-        pbs_statjob(connection_id, id, Attribute.make_attrl(attributes), None)
-    )
+    return pbs_statjob(connection_id, id, Attribute.make_attrl(attributes), None)
 
 
 def stat_node(
     connection_id: int, id: Optional[str] = "", attributes: list[Attribute] = []
-) -> list[BatchStatus]:
+) -> list[dict]:
     """Get status of nodes(s)
 
     Args:
@@ -419,16 +417,14 @@ def stat_node(
         attributes (list[Attribute], optional): List of filter attributes. Defaults to None.
 
     Returns:
-        list[BatchStatus]: List of statuses
+        list[dict]: List of statuses
     """
-    return BatchStatus.from_batch_status(
-        pbs_statnode(connection_id, id, Attribute.make_attrl(attributes), None)
-    )
+    return pbs_statnode(connection_id, id, Attribute.make_attrl(attributes), None)
 
 
 def stat_queue(
     connection_id: int, id: Optional[str] = "", attributes: list[Attribute] = []
-) -> list[BatchStatus]:
+) -> list[dict]:
     """Get status of queue(s)
 
     Args:
@@ -437,16 +433,12 @@ def stat_queue(
         attributes (list[Attribute], optional): List of filter attributes. Defaults to None.
 
     Returns:
-        list[BatchStatus]: List of statuses
+        list[dict]: List of statuses
     """
-    return BatchStatus.from_batch_status(
-        pbs_statque(connection_id, id, Attribute.make_attrl(attributes), None)
-    )
+    return pbs_statque(connection_id, id, Attribute.make_attrl(attributes), None)
 
 
-def stat_server(
-    connection_id: int, attributes: list[Attribute] = []
-) -> list[BatchStatus]:
+def stat_server(connection_id: int, attributes: list[Attribute] = []) -> list[dict]:
     """Get status of server
 
     Args:
@@ -454,16 +446,14 @@ def stat_server(
         attributes (list[Attribute], optional): List of filter attributes. Defaults to None.
 
     Returns:
-        list[BatchStatus]: Server status
+        list[dict]: Server status
     """
-    return BatchStatus.from_batch_status(
-        pbs_statserver(connection_id, Attribute.make_attrl(attributes), None)
-    )
+    return pbs_statserver(connection_id, Attribute.make_attrl(attributes), None)
 
 
 def stat_resource(
     connection_id: int, id: Optional[str] = "", attributes: list[Attribute] = []
-) -> list[BatchStatus]:
+) -> list[dict]:
     """Get status of resource(s)
 
     Args:
@@ -472,16 +462,12 @@ def stat_resource(
         attributes (list[Attribute], optional): List of filter attributes. Defaults to None.
 
     Returns:
-        list[BatchStatus]: List of statuses
+        list[dict]: List of statuses
     """
-    return BatchStatus.from_batch_status(
-        pbs_statrsc(connection_id, id, Attribute.make_attrl(attributes), None)
-    )
+    return pbs_statrsc(connection_id, id, Attribute.make_attrl(attributes), None)
 
 
-def stat_scheduler(
-    connection_id: int, attributes: list[Attribute] = []
-) -> list[BatchStatus]:
+def stat_scheduler(connection_id: int, attributes: list[Attribute] = []) -> list[dict]:
     """Get status of scheduler
 
     Args:
@@ -489,16 +475,14 @@ def stat_scheduler(
         attributes (list[Attribute], optional): List of filter attributes. Defaults to None.
 
     Returns:
-        list[BatchStatus]: Scheduler status
+        list[dict]: Scheduler status
     """
-    return BatchStatus.from_batch_status(
-        pbs_statsched(connection_id, Attribute.make_attrl(attributes), None)
-    )
+    return pbs_statsched(connection_id, Attribute.make_attrl(attributes), None)
 
 
 def stat_reservation(
     connection_id: int, id: Optional[str] = "", attributes: list[Attribute] = []
-) -> list[BatchStatus]:
+) -> list[dict]:
     """Get status of reservation(s)
 
     Args:
@@ -507,16 +491,14 @@ def stat_reservation(
         attributes (list[Attribute], optional): List of filter attributes. Defaults to None.
 
     Returns:
-        list[BatchStatus]: List of statuses
+        list[dict]: List of statuses
     """
-    return BatchStatus.from_batch_status(
-        pbs_statresv(connection_id, id, Attribute.make_attrl(attributes), None)
-    )
+    return pbs_statresv(connection_id, id, Attribute.make_attrl(attributes), None)
 
 
 def stat_hook(
     connection_id: int, id: Optional[str] = "", attributes: list[Attribute] = []
-) -> list[BatchStatus]:
+) -> list[dict]:
     """Get status of hook(s)
 
     Args:
@@ -525,11 +507,9 @@ def stat_hook(
         attributes (list[Attribute], optional): List of filter attributes. Defaults to None.
 
     Returns:
-        list[BatchStatus]: List of statuses
+        list[dict]: List of statuses
     """
-    return BatchStatus.from_batch_status(
-        pbs_stathook(connection_id, id, Attribute.make_attrl(attributes), None)
-    )
+    return pbs_stathook(connection_id, id, Attribute.make_attrl(attributes), None)
 
 
 def submit_job(
