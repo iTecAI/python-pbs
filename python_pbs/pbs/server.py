@@ -35,3 +35,7 @@ class PBS:
     @property
     def schedulers(self) -> SchedulerOperator:
         return SchedulerOperator(self.connection)
+
+    @property
+    def jobs(self) -> JobOperator:
+        return JobOperator(self.connection)

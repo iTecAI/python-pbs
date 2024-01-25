@@ -1,12 +1,20 @@
 from enum import Enum
-from typing import Optional
+from typing import Optional, Union
 
 from pydantic import BaseModel
 
 
-class QueueType(Enum):
+class QueueTypeLong(Enum):
     EXECUTION = "Execution"
     ROUTING = "Routing"
+
+
+class QueueTypeShort(Enum):
+    EXECUTION = "E"
+    ROUTING = "R"
+
+
+QueueType = Union[QueueTypeLong, QueueTypeShort]
 
 
 class StateCount(BaseModel):

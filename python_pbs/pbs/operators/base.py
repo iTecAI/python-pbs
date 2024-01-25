@@ -92,7 +92,7 @@ class BaseObjectManager:
     def __init__(self, connection: int):
         self.connection = connection
 
-    def stat(self, ids: list[str] = None) -> Union[O, None]:
+    def stat(self, ids: list[str] = None) -> list[O]:
         result = stat_map[self.object_type](
             self.connection, id=",".join(ids) if ids else None
         )
