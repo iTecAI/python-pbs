@@ -8,7 +8,7 @@ load_dotenv()
 
 @fixture
 def con():
-    return connect()
+    return connect(os.environ["OPTION_NODE_ID"])
 
 
 @fixture
