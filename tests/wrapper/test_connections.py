@@ -1,4 +1,4 @@
-from python_pbs import *
+from python_pbs.util.typed_wrapper import *
 
 
 def test_connect(con: int):

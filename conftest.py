@@ -1,5 +1,5 @@
 from pytest import fixture
-from python_pbs import connect
+from python_pbs.util.typed_wrapper import *
 from dotenv import load_dotenv
 import os
 
