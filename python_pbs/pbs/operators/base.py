@@ -14,6 +14,8 @@ from python_pbs.util import (
     ManagerObject,
 )
 
+from ..exceptions import *
+
 stat_map = {
     "hook": stat_hook,
     "node": stat_node,
@@ -77,8 +79,12 @@ class AlterableObject(BaseObject):
             self.data.id,
             [Attribute(name=property, value=str(value), operation=operation)],
         )
-        print(result)
-        self.reload()
+        if result == 0:
+            self.reload()
+        else:
+            raise PBSException(
+                code=result, context=f"Attempting to set {property} on {self.data.id}"
+            )
 
 
 O = TypeVar("O", BaseObject, None)
