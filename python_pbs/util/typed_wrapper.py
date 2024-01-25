@@ -407,7 +407,11 @@ def stat_free(status: list[BatchStatus]) -> None:
 
 
 def stat_job(
-    connection_id: int, id: Optional[str] = "", attributes: list[Attribute] = [], historical: bool = False, subjobs: bool = False
+    connection_id: int,
+    id: Optional[str] = "",
+    attributes: list[Attribute] = [],
+    historical: bool = False,
+    subjobs: bool = False,
 ) -> list[dict]:
     """Get status of job(s)
 
@@ -419,7 +423,12 @@ def stat_job(
     Returns:
         list[dict]: List of statuses
     """
-    return pbs_statjob(connection_id, id, Attribute.make_attrl(attributes), f"{'x' if historical else ''}{'t' if subjobs else ''}")
+    return pbs_statjob(
+        connection_id,
+        id,
+        Attribute.make_attrl(attributes),
+        f"{'x' if historical else ''}{'t' if subjobs else ''}",
+    )
 
 
 def stat_node(
@@ -454,7 +463,9 @@ def stat_queue(
     return pbs_statque(connection_id, id, Attribute.make_attrl(attributes), None)
 
 
-def stat_server(connection_id: int, attributes: list[Attribute] = []) -> list[dict]:
+def stat_server(
+    connection_id: int, attributes: list[Attribute] = [], **kwargs
+) -> list[dict]:
     """Get status of server
 
     Args:
