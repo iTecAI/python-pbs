@@ -1,5 +1,6 @@
 from typing import Any, Literal, Optional
 from pydantic import BaseModel
+from .common import StateCount
 
 
 class ServerLicenseCount(BaseModel):
@@ -19,25 +20,6 @@ class ServerLicenseCount(BaseModel):
             used=values.get("Used", 0),
             high_use=values.get("High_Use", 0),
         )
-
-
-class ServerStateCount(BaseModel):
-    transit: Optional[int] = 0
-    queued: Optional[int] = 0
-    held: Optional[int] = 0
-    waiting: Optional[int] = 0
-    running: Optional[int] = 0
-    exiting: Optional[int] = 0
-    begun: Optional[int] = 0
-
-    @classmethod
-    def from_string(cls, data: str) -> "ServerStateCount":
-        values = {
-            p.split(":")[0].lower(): int(p.split(":")[1])
-            for p in data.split(" ")
-            if ":" in p
-        }
-        return ServerStateCount(**values)
 
 
 class Server(BaseModel):
@@ -130,7 +112,7 @@ class Server(BaseModel):
             "Terminating_Delayed",
         ]
     ] = None
-    state_count: Optional[ServerStateCount] = ServerStateCount()
+    state_count: Optional[StateCount] = StateCount()
     total_jobs: Optional[int] = 0
 
     @classmethod
@@ -153,9 +135,9 @@ class Server(BaseModel):
             else ServerLicenseCount()
         )
         data["state_count"] = (
-            ServerStateCount.from_string(data["state_count"])
+            StateCount.from_string(data["state_count"])
             if "state_count" in data.keys()
-            else ServerStateCount()
+            else StateCount()
         )
 
         return Server(**data)

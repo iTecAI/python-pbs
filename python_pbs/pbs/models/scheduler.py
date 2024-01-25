@@ -25,3 +25,7 @@ class Scheduler(BaseModel):
     sched_priv: Optional[str] = None
     state: Optional[Literal["down", "idle", "scheduling"]] = "down"
     throughput_mode: Optional[bool] = True
+
+    @classmethod
+    def from_pbs(cls, data: dict) -> "Scheduler":
+        return Scheduler(**{k.lower(): v for k, v in data.items()})

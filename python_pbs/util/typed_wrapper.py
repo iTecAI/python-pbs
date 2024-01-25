@@ -68,20 +68,25 @@ class Attribute(BaseModel):
     operation: Optional[BatchOperation] = None
 
     @staticmethod
-    def make_attrl(attributes: list["Attribute"]) -> attrl:
+    def make_attrl(
+        attributes: list["Attribute"], with_op: bool = False
+    ) -> Union[attrl, attropl]:
         if len(attributes) == 0:
             return None
 
-        root = attrl()
+        root = attropl() if with_op else attrl()
         current = root
         count = 1
         for i in attributes:
             current.name = i.name
             current.resource = i.resource
             current.value = i.value
-            current.op = i.operation
+            if with_op:
+                current.op = (
+                    i.operation.value if i.operation else BatchOperation.EQ.value
+                )
             if count < len(attributes):
-                current.next = attrl()
+                current.next = attropl() if with_op else attrl()
                 current = current.next
             count += 1
 
@@ -194,7 +199,9 @@ def alter_job(connection_id: int, job_id: str, attributes: list[Attribute] = [])
     Returns:
         _type_: _description_
     """
-    return pbs_alterjob(connection_id, job_id, Attribute.make_attrl(attributes), None)
+    return pbs_alterjob(
+        connection_id, job_id, Attribute.make_attrl(attributes, with_op=True), None
+    )
 
 
 def default_server() -> str:
@@ -279,7 +286,14 @@ def execute_manager_command(
     Returns:
         int: 0 if successful, otherwise error
     """
-    return pbs_manager(connection_id, command, object, object_name, attributes, None)
+    return pbs_manager(
+        connection_id,
+        command.value,
+        object.value,
+        object_name,
+        Attribute.make_attrl(attributes, with_op=True),
+        None,
+    )
 
 
 def move_job(connection_id: int, job_id: str, destination: Optional[str] = None) -> int:
@@ -363,7 +377,9 @@ def select_jobs(connection_id: int, attributes: list[Attribute]) -> list[str]:
     Returns:
         list[str]: List of results
     """
-    result = pbs_selectjob(connection_id, Attribute.make_attrl(attributes), None)
+    result = pbs_selectjob(
+        connection_id, Attribute.make_attrl(attributes, with_op=True), None
+    )
     return [] if result == None else result
 
 
@@ -391,7 +407,7 @@ def stat_free(status: list[BatchStatus]) -> None:
 
 
 def stat_job(
-    connection_id: int, id: Optional[str] = "", attributes: list[Attribute] = []
+    connection_id: int, id: Optional[str] = "", attributes: list[Attribute] = [], historical: bool = False, subjobs: bool = False
 ) -> list[dict]:
     """Get status of job(s)
 
@@ -403,7 +419,7 @@ def stat_job(
     Returns:
         list[dict]: List of statuses
     """
-    return pbs_statjob(connection_id, id, Attribute.make_attrl(attributes), None)
+    return pbs_statjob(connection_id, id, Attribute.make_attrl(attributes), f"{'x' if historical else ''}{'t' if subjobs else ''}")
 
 
 def stat_node(
@@ -530,7 +546,11 @@ def submit_job(
         str: Created job ID
     """
     return pbs_submit(
-        connection_id, Attribute.make_attrl(attributes), script, destination, None
+        connection_id,
+        Attribute.make_attrl(attributes, with_op=True),
+        script,
+        destination,
+        None,
     )
 
 

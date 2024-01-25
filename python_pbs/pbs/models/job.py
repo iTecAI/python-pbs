@@ -1,6 +1,7 @@
 from typing import Literal, Optional
 from pydantic import BaseModel
 from enum import Enum
+from .common import QueueType
 
 
 class JobAccrueType(Enum):
@@ -38,11 +39,6 @@ class JobKeepFiles(Enum):
     RETAIN_EO = "eo"
     DIRECT = "d"
     NEITHER = "n"
-
-
-class JobQueueType(Enum):
-    EXECUTION = "E"
-    ROUTING = "R"
 
 
 class JobSandbox(Enum):
@@ -114,7 +110,7 @@ class Job(BaseModel):
     qtime: Optional[int] = None
     queue: Optional[str] = None
     queue_rank: Optional[int] = None
-    queue_type: Optional[JobQueueType] = None
+    queue_type: Optional[QueueType] = None
     release_nodes_on_stageout: Optional[bool] = False
     remove_files: Optional[Literal["e", "o", "eo", "oe"]] = None
     rerunable: Optional[bool] = True
@@ -140,3 +136,7 @@ class Job(BaseModel):
     umask: Optional[int] = 77
     user_list: Optional[str] = None
     variable_list: Optional[str] = None
+
+    @classmethod
+    def from_pbs(cls, data: dict) -> "Job":
+        return Job(**{k.lower(): v for k, v in data.items()})
