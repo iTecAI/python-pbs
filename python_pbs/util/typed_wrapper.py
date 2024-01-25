@@ -367,7 +367,12 @@ def run_job(connection_id: int, job_id: str, location: Optional[str] = None) -> 
     return pbs_runjob(connection_id, job_id, location, None)
 
 
-def select_jobs(connection_id: int, attributes: list[Attribute]) -> list[str]:
+def select_jobs(
+    connection_id: int,
+    attributes: list[Attribute],
+    historical: bool = False,
+    subjobs: bool = False,
+) -> list[str]:
     """Select jobs based on criteria
 
     Args:
@@ -378,7 +383,9 @@ def select_jobs(connection_id: int, attributes: list[Attribute]) -> list[str]:
         list[str]: List of results
     """
     result = pbs_selectjob(
-        connection_id, Attribute.make_attrl(attributes, with_op=True), None
+        connection_id,
+        Attribute.make_attrl(attributes, with_op=True),
+        f"{'x' if historical else ''}{'t' if subjobs else ''}",
     )
     return [] if result == None else result
 
