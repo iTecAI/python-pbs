@@ -127,7 +127,10 @@ class Server(BaseModel):
             keys = [k.split(".")[1] for k in data.keys() if k.startswith(key + ".")]
             data[key] = {}
             for k in keys:
-                data[key][k] = int(data[key + "." + k])
+                try:
+                    data[key][k] = int(data[key + "." + k])
+                except:
+                    data[key][k] = data[key + "." + k]
 
         data["license_count"] = (
             ServerLicenseCount.from_string(data["license_count"])

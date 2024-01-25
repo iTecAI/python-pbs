@@ -412,6 +412,7 @@ def stat_job(
     attributes: list[Attribute] = [],
     historical: bool = False,
     subjobs: bool = False,
+    **kwargs,
 ) -> list[dict]:
     """Get status of job(s)
 
@@ -432,7 +433,10 @@ def stat_job(
 
 
 def stat_node(
-    connection_id: int, id: Optional[str] = "", attributes: list[Attribute] = []
+    connection_id: int,
+    id: Optional[str] = "",
+    attributes: list[Attribute] = [],
+    **kwargs,
 ) -> list[dict]:
     """Get status of nodes(s)
 
@@ -448,7 +452,10 @@ def stat_node(
 
 
 def stat_queue(
-    connection_id: int, id: Optional[str] = "", attributes: list[Attribute] = []
+    connection_id: int,
+    id: Optional[str] = "",
+    attributes: list[Attribute] = [],
+    **kwargs,
 ) -> list[dict]:
     """Get status of queue(s)
 
@@ -479,7 +486,10 @@ def stat_server(
 
 
 def stat_resource(
-    connection_id: int, id: Optional[str] = "", attributes: list[Attribute] = []
+    connection_id: int,
+    id: Optional[str] = "",
+    attributes: list[Attribute] = [],
+    **kwargs,
 ) -> list[dict]:
     """Get status of resource(s)
 
@@ -494,7 +504,9 @@ def stat_resource(
     return pbs_statrsc(connection_id, id, Attribute.make_attrl(attributes), None)
 
 
-def stat_scheduler(connection_id: int, attributes: list[Attribute] = []) -> list[dict]:
+def stat_scheduler(
+    connection_id: int, attributes: list[Attribute] = [], **kwargs
+) -> list[dict]:
     """Get status of scheduler
 
     Args:
@@ -508,7 +520,10 @@ def stat_scheduler(connection_id: int, attributes: list[Attribute] = []) -> list
 
 
 def stat_reservation(
-    connection_id: int, id: Optional[str] = "", attributes: list[Attribute] = []
+    connection_id: int,
+    id: Optional[str] = "",
+    attributes: list[Attribute] = [],
+    **kwargs,
 ) -> list[dict]:
     """Get status of reservation(s)
 
@@ -524,7 +539,10 @@ def stat_reservation(
 
 
 def stat_hook(
-    connection_id: int, id: Optional[str] = "", attributes: list[Attribute] = []
+    connection_id: int,
+    id: Optional[str] = "",
+    attributes: list[Attribute] = [],
+    **kwargs,
 ) -> list[dict]:
     """Get status of hook(s)
 

@@ -93,7 +93,9 @@ class BaseObjectManager:
         self.connection = connection
 
     def stat(self, ids: list[str] = None) -> Union[O, None]:
-        result = stat_map[self.object_type](self.connection, id=ids)
+        result = stat_map[self.object_type](
+            self.connection, id=",".join(ids) if ids else None
+        )
         return [
             self.object_factory(self.connection, self.object_model.from_pbs(i))
             for i in result
@@ -101,11 +103,24 @@ class BaseObjectManager:
 
     @property
     def all(self) -> list[O]:
-        return stat_map[self.object_type](self.connection)
+        return self.stat()
 
     def get(self, id: str) -> Union[O, None]:
         result = self.stat(ids=[id])
         if len(result) > 0:
             return result[0]
         else:
-            return None
+            fallback = {i["id"]: i for i in stat_map[self.object_type](self.connection)}
+            if id in fallback.keys():
+                return self.object_factory(
+                    self.connection, self.object_model.from_pbs(fallback[id])
+                )
+            else:
+                return None
+
+    def __getitem__(self, key) -> O:
+        result = self.get(key)
+        if not result:
+            raise KeyError(f"{key} is not a known {self.object_type} name.")
+
+        return result

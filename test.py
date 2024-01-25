@@ -3,4 +3,6 @@ from python_pbs.util import *
 
 pbs = PBS()
 print(pbs.server.data)
-pbs.server.set("job_history_enable", True)
+print(pbs.queues["workq"].data)
+print(pbs.nodes["hulkling"].data)
+print(pbs.schedulers["default"].data)

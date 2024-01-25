@@ -19,3 +19,19 @@ class PBS:
     @property
     def status(self) -> Server:
         return ServerOperator(self.connection).get(self.server_name).data
+
+    @property
+    def hooks(self) -> HookOperator:
+        return HookOperator(self.connection)
+
+    @property
+    def nodes(self) -> NodeOperator:
+        return NodeOperator(self.connection)
+
+    @property
+    def queues(self) -> QueueOperator:
+        return QueueOperator(self.connection)
+
+    @property
+    def schedulers(self) -> SchedulerOperator:
+        return SchedulerOperator(self.connection)

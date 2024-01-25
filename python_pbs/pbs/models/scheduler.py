@@ -18,7 +18,7 @@ class Scheduler(BaseModel):
     preempt_sort: Optional[Literal["min_time_since_start"]] = "min_time_since_start"
     scheduler_iteration: Optional[int] = 600
     scheduling: Optional[bool] = False
-    sched_cycle_length: Optional[int] = 1200
+    sched_cycle_length: Optional[str] = "20:00:00"
     sched_host: Optional[str] = None
     sched_log: Optional[str] = None
     sched_preempt_enforce_resumption: Optional[bool] = False
