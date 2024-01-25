@@ -3,6 +3,21 @@ from ..extensions import *
 from pydantic import BaseModel
 from enum import Enum
 
+try:
+    from ..extensions import MGR_OBJ_JOBARRAY_PARENT as _MGR_OBJ_JOBARRAY_PARENT
+except ImportError:
+    _MGR_OBJ_JOBARRAY_PARENT = "MGR_OBJ_JOBARRAY_PARENT"
+
+try:
+    from ..extensions import MGR_OBJ_SUBJOB as _MGR_OBJ_SUBJOB
+except ImportError:
+    _MGR_OBJ_SUBJOB = "MGR_OBJ_SUBJOB"
+
+try:
+    from ..extensions import INTERNAL as _INTERNAL
+except ImportError:
+    _INTERNAL = "INTERNAL"
+
 
 class ManagerCommand(Enum):
     NONE = MGR_CMD_NONE
@@ -30,8 +45,8 @@ class ManagerObject(Enum):
     HOST = MGR_OBJ_HOST
     HOOK = MGR_OBJ_HOOK
     PBS_HOOK = MGR_OBJ_PBS_HOOK
-    JOB_ARRAY_PARENT = MGR_OBJ_JOBARRAY_PARENT
-    SUB_JOB = MGR_OBJ_SUBJOB
+    JOBARRAY_PARENT = _MGR_OBJ_JOBARRAY_PARENT
+    SUBJOB = _MGR_OBJ_SUBJOB
     LAST = MGR_OBJ_LAST
 
 
@@ -47,7 +62,7 @@ class BatchOperation(Enum):
     LE = LE
     LT = LT
     DFLT = DFLT
-    INTERNAL = INTERNAL
+    INTERNAL = _INTERNAL
 
 
 class MessageFile(Enum):
