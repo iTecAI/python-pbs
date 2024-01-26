@@ -120,6 +120,13 @@ class PBS:
             attributes["job_name"] = name
         parsed_attrs = [
             Attribute(name=k, value=v, operation=BatchOperation.SET)
+            if not "." in k
+            else Attribute(
+                name=k.split(".")[0],
+                resource=k.split(".")[1],
+                value=v,
+                operation=BatchOperation.SET,
+            )
             for k, v in attributes.items()
         ]
         result = submit_job(self.connection, parsed_attrs, script, destination=queue)
@@ -177,6 +184,13 @@ class PBS:
         )
         parsed_attrs = [
             Attribute(name=k, value=v, operation=BatchOperation.SET)
+            if not "." in k
+            else Attribute(
+                name=k.split(".")[0],
+                resource=k.split(".")[1],
+                value=v,
+                operation=BatchOperation.SET,
+            )
             for k, v in attributes.items()
         ]
         result = submit_job(self.connection, parsed_attrs, None, destination=queue)
