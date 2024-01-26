@@ -620,3 +620,19 @@ def terminate(connection_id: int, manner: TerminationMode) -> int:
         int: 0 if successful, otherwise error
     """
     return pbs_terminate(connection_id, manner, None)
+
+
+def release_job(
+    connection_id: int, job_id: str, hold_type: Literal["u", "o", "s"] = "u"
+) -> int:
+    """Release held job
+
+    Args:
+        connection_id (int): Connection ID
+        job_id (str): Job ID
+        hold_type (Literal[&quot;u&quot;, &quot;o&quot;, &quot;s&quot;], optional): Hold Type. Defaults to "u".
+
+    Returns:
+        int: 0 if successful, otherwise error
+    """
+    return pbs_rlsjob(connection_id, job_id, hold_type, None)

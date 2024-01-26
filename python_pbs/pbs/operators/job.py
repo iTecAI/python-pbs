@@ -3,8 +3,19 @@ from enum import Enum
 import os
 import time
 from typing import Any, AsyncGenerator, Generator, Literal, Union
+from python_pbs.pbs.exceptions import PBSException
 from ..models import Job
-from python_pbs.util import stat_job, Attribute, select_jobs
+from python_pbs.util import (
+    stat_job,
+    Attribute,
+    select_jobs,
+    delete_job,
+    rerun_job,
+    alter_job,
+    hold_job,
+    release_job,
+    swap_jobs,
+)
 
 
 class JobAttribute(Attribute):
@@ -166,6 +177,68 @@ class JobObject:
                     await asyncio.sleep(0.1)
                     continue
                 yield line
+
+    def delete(self) -> None:
+        result = delete_job(self.connection, self.data.id)
+        if result == 0:
+            return None
+
+        raise PBSException(result, context=f"Failed to delete job {self.data.id}")
+
+    def rerun(self) -> None:
+        result = rerun_job(self.connection, self.data.id)
+
+        if result == 0:
+            self.reload()
+            return None
+
+        raise PBSException(result, context=f"Failed to rerun job {self.data.id}")
+
+    def set(self, attributes: list[JobAttribute]):
+        result = alter_job(
+            self.connection,
+            self.data.id,
+            JobAttribute.make_attrl(attributes, with_op=True),
+        )
+        if result == 0:
+            self.reload()
+        else:
+            raise PBSException(
+                code=result, context=f"Attempting to alter job {self.data.id}"
+            )
+
+    def hold(self, type: Literal["u", "o", "s"] = "u") -> None:
+        result = hold_job(self.connection, self.data.id, hold_type=type)
+
+        if result == 0:
+            self.reload()
+            return None
+
+        raise PBSException(result, context=f"Failed to hold job {self.data.id}")
+
+    def release(self, type: Literal["u", "o", "s"] = "u") -> None:
+        result = release_job(self.connection, self.data.id, hold_type=type)
+
+        if result == 0:
+            self.reload()
+            return None
+
+        raise PBSException(result, context=f"Failed to release job {self.data.id}")
+
+    def swap(self, other: Union[Job, "JobObject"]) -> None:
+        if isinstance(other, Job):
+            jid = other.id
+        else:
+            jid = other.data.id
+
+        result = swap_jobs(self.connection, self.data.id, jid)
+        if result == 0:
+            self.reload()
+            return None
+
+        raise PBSException(
+            result, context=f"Failed to swap job {self.data.id} with job {jid}"
+        )
 
 
 class JobOperator:

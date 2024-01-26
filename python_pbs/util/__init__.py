@@ -35,4 +35,5 @@ from .typed_wrapper import (
     stat_server,
     submit_job,
     terminate,
+    release_job,
 )
