@@ -1,3 +1,4 @@
+import os
 from typing import Union
 from ..util import *
 from .exceptions import PBSException
@@ -41,13 +42,69 @@ class PBS:
         return JobOperator(self.connection)
 
     def submit_script(
-        self, script: str, queue: str = None, attributes: JobSubmission = {}
+        self,
+        script: str,
+        queue: str = None,
+        name: str = None,
+        attributes: JobSubmission = {},
+        output_directory: str = None,
     ) -> JobObject:
+        if output_directory:
+            os.makedirs(output_directory, exist_ok=True)
+            attributes["output_path"] = os.path.join(
+                os.path.abspath(output_directory),
+                f"{name}.out.log" if name else "script.out.log",
+            )
+            attributes["error_path"] = os.path.join(
+                os.path.abspath(output_directory),
+                f"{name}.err.log" if name else "script.err.log",
+            )
+        if name:
+            attributes["job_name"] = name
         parsed_attrs = [
             Attribute(name=k, value=v, operation=BatchOperation.SET)
             for k, v in attributes.items()
         ]
         result = submit_job(self.connection, parsed_attrs, script, destination=queue)
+        if result == None:
+            raise PBSException(-1, context="Job submission failed.")
+        else:
+            return self.jobs.get(result, historical=True, subjob=True)
+
+    def submit_command(
+        self,
+        executable: str,
+        *args,
+        queue: str = None,
+        name: str = None,
+        attributes: JobSubmission = {},
+        output_directory: str = None,
+    ) -> JobObject:
+        if output_directory:
+            os.makedirs(output_directory, exist_ok=True)
+            attributes["output_path"] = os.path.join(
+                os.path.abspath(output_directory),
+                f"{name}.out.log" if name else "script.out.log",
+            )
+            attributes["error_path"] = os.path.join(
+                os.path.abspath(output_directory),
+                f"{name}.err.log" if name else "script.err.log",
+            )
+        if name:
+            attributes["job_name"] = name
+        attributes[
+            "executable"
+        ] = f"<jsdl-hpcpa:Executable>{executable}</jsdl-hpcpa:Executable>"
+        attributes["argument_list"] = (
+            " ".join([f"<jsdl-hpcpa:Argument>{i}</jsdl-hpcpa:Argument>" for i in args])
+            if len(args) > 0
+            else None
+        )
+        parsed_attrs = [
+            Attribute(name=k, value=v, operation=BatchOperation.SET)
+            for k, v in attributes.items()
+        ]
+        result = submit_job(self.connection, parsed_attrs, None, destination=queue)
         if result == None:
             raise PBSException(-1, context="Job submission failed.")
         else:

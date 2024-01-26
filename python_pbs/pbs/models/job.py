@@ -82,6 +82,7 @@ class Job(BaseModel):
     estimated: Optional[str] = None
     etime: Optional[int] = None
     euser: Optional[str] = None
+    executable: Optional[str] = None
     execution_time: Optional[int] = None
     exec_host: Optional[str] = None
     exec_vnode: Optional[str] = None
@@ -167,6 +168,7 @@ class JobSubmission(TypedDict):
     estimated: Optional[str]
     etime: Optional[int]
     euser: Optional[str]
+    executable: Optional[str]
     execution_time: Optional[int]
     exec_host: Optional[str]
     exec_vnode: Optional[str]

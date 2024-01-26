@@ -102,7 +102,7 @@ class Attribute(BaseModel):
                 current.op = (
                     (i.operation.value if i.operation else BatchOperation.EQ.value)
                     if not force_op
-                    else force_op
+                    else force_op.value
                 )
             if count < len(attributes):
                 current.next = attropl() if with_op else attrl()

@@ -159,3 +159,4 @@ cython_debug/
 **.so
 **.c
 python_pbs/extensions/pbs/*.py
+test-out/*
