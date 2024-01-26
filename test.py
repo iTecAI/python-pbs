@@ -5,6 +5,5 @@ from python_pbs.util import *
 
 pbs = PBS()
 print(pbs.server.data)
-print(pbs.queues.all[0].data)
-print(pbs.nodes.all[0].data)
+print(pbs.queues["s1"].available("dharr"))
 # print(stat_resource(pbs.connection, id="cput"))

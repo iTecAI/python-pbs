@@ -31,8 +31,8 @@ class Queue(BaseModel):
     max_run_res_soft: Optional[str] = None
     max_run_soft: Optional[str] = None
     max_running: Optional[int] = None
-    max_user_res: Optional[str] = None
-    max_user_res_soft: Optional[str] = None
+    max_user_res: Optional[dict] = {}
+    max_user_res_soft: Optional[dict] = {}
     max_user_run: Optional[int] = None
     max_user_run_soft: Optional[int] = None
     node_group_key: Optional[str] = None
@@ -64,6 +64,8 @@ class Queue(BaseModel):
             "resources_max",
             "default_chunk",
             "resources_min",
+            "max_user_res",
+            "max_user_res_soft"
         ]:
             keys = [k.split(".")[1] for k in data.keys() if k.startswith(key + ".")]
             data[key] = {}

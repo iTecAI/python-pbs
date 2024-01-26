@@ -88,7 +88,7 @@ class Job(BaseModel):
     exec_vnode: Optional[str] = None
     exit_status: Optional[int] = None
     forward_x11_cookie: Optional[int] = None
-    forward_x11_port: Optional[int] = None
+    forward_x11_port: Optional[bool] = False
     group_list: Optional[str] = None
     hold_types: Optional[str] = "n"
     interactive: Optional[bool] = False
@@ -116,10 +116,10 @@ class Job(BaseModel):
     release_nodes_on_stageout: Optional[bool] = False
     remove_files: Optional[Literal["e", "o", "eo", "oe"]] = None
     rerunable: Optional[bool] = True
-    resource_list: Optional[str] = None
-    resources_released: Optional[str] = None
-    resource_release_list: Optional[str] = None
-    resources_used: Optional[str] = None
+    resource_list: Optional[dict] = {}
+    resources_released: Optional[dict] = {}
+    resource_release_list: Optional[dict] = {}
+    resources_used: Optional[dict] = {}
     run_count: Optional[int] = 0
     run_version: Optional[int] = None
     sandbox: Optional[JobSandbox] = JobSandbox.HOME
@@ -141,6 +141,19 @@ class Job(BaseModel):
 
     @classmethod
     def from_pbs(cls, data: dict) -> "Job":
+        for key in [
+            "resource_list",
+            "resources_released",
+            "resource_release_list",
+            "resources_used",
+        ]:
+            keys = [k.split(".")[1] for k in data.keys() if k.startswith(key + ".")]
+            data[key] = {}
+            for k in keys:
+                try:
+                    data[key][k] = int(data[key + "." + k])
+                except:
+                    data[key][k] = data[key + "." + k]
         return Job(**{k.lower(): v for k, v in data.items()})
 
 
