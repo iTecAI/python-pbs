@@ -1,3 +1,4 @@
+import time
 from python_pbs import PBS, JobAttribute
 from python_pbs.pbs.models.job import JobKeepFiles
 from python_pbs.util import *
@@ -20,3 +21,6 @@ result = pbs.submit_script(
 )
 if result:
     print(result.data)
+    time.sleep(2)
+    for line in result.logs():
+        print(line.strip())

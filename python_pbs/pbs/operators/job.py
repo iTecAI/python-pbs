@@ -1,4 +1,8 @@
-from typing import Literal, Union
+import asyncio
+from enum import Enum
+import os
+import time
+from typing import Any, AsyncGenerator, Generator, Literal, Union
 from ..models import Job
 from python_pbs.util import stat_job, Attribute, select_jobs
 
@@ -86,6 +90,11 @@ class JobAttribute(Attribute):
     ]
 
 
+class JobOutputFile(Enum):
+    OUTPUT = "OU"
+    ERROR = "ER"
+
+
 class JobObject:
     object_type = "job"
     object_model = Job
@@ -117,6 +126,46 @@ class JobObject:
         result = self.stat()
         if result:
             self.data = result
+
+    def logs(
+        self,
+        spool_path="/var/spool/pbs/spool",
+        file: JobOutputFile = JobOutputFile.OUTPUT,
+        yield_waiting: bool = False,
+    ) -> Generator[str, Any, Any]:
+        with open(os.path.join(spool_path, f"{self.data.id}.{file.value}"), "r") as f:
+            while True:
+                if not os.path.exists(
+                    os.path.join(spool_path, f"{self.data.id}.{file.value}")
+                ):
+                    break
+                line = f.readline()
+                if not line:
+                    if yield_waiting:
+                        yield None
+                    time.sleep(0.1)
+                    continue
+                yield line
+
+    async def logs_async(
+        self,
+        spool_path="/var/spool/pbs/spool",
+        file: JobOutputFile = JobOutputFile.OUTPUT,
+        yield_waiting: bool = False,
+    ) -> AsyncGenerator[str, Any]:
+        with open(os.path.join(spool_path, f"{self.data.id}.{file.value}"), "r") as f:
+            while True:
+                if not os.path.exists(
+                    os.path.join(spool_path, f"{self.data.id}.{file.value}")
+                ):
+                    break
+                line = f.readline()
+                if not line:
+                    if yield_waiting:
+                        yield None
+                    await asyncio.sleep(0.1)
+                    continue
+                yield line
 
 
 class JobOperator:
