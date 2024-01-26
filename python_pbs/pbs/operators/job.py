@@ -142,16 +142,16 @@ class JobOperator:
         ]
 
     @property
-    def all(self) -> list[Job]:
+    def all(self) -> list[JobObject]:
         return self.stat()
 
     @property
-    def all_complete(self) -> list[Job]:
+    def all_complete(self) -> list[JobObject]:
         return self.stat(historical=True, subjobs=True)
 
     def get(
         self, id: str, historical: bool = False, subjob: bool = False
-    ) -> Union[Job, None]:
+    ) -> Union[JobObject, None]:
         result = self.stat(ids=[id], historical=historical, subjobs=subjob)
         if len(result) > 0:
             return result[0]

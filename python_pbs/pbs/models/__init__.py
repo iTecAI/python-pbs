@@ -7,6 +7,7 @@ from .job import (
     JobKeepFiles,
     JobSandbox,
     JobState,
+    JobSubmission,
 )
 from .common import QueueType, StateCount
 from .queue import Queue

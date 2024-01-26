@@ -1,0 +1,1 @@
+curl https://files.dax.gay/gr.data.gr_book

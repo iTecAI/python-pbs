@@ -39,3 +39,16 @@ class PBS:
     @property
     def jobs(self) -> JobOperator:
         return JobOperator(self.connection)
+
+    def submit_script(
+        self, script: str, queue: str = None, attributes: JobSubmission = {}
+    ) -> JobObject:
+        parsed_attrs = [
+            Attribute(name=k, value=v, operation=BatchOperation.SET)
+            for k, v in attributes.items()
+        ]
+        result = submit_job(self.connection, parsed_attrs, script, destination=queue)
+        if result == None:
+            raise PBSException(-1, context="Job submission failed.")
+        else:
+            return self.jobs.get(result, historical=True, subjob=True)

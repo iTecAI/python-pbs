@@ -84,7 +84,9 @@ class Attribute(BaseModel):
 
     @staticmethod
     def make_attrl(
-        attributes: list["Attribute"], with_op: bool = False
+        attributes: list["Attribute"],
+        with_op: bool = False,
+        force_op: BatchOperation = None,
     ) -> Union[attrl, attropl]:
         if len(attributes) == 0:
             return None
@@ -98,7 +100,9 @@ class Attribute(BaseModel):
             current.value = i.value
             if with_op:
                 current.op = (
-                    i.operation.value if i.operation else BatchOperation.EQ.value
+                    (i.operation.value if i.operation else BatchOperation.EQ.value)
+                    if not force_op
+                    else force_op
                 )
             if count < len(attributes):
                 current.next = attropl() if with_op else attrl()
@@ -598,7 +602,7 @@ def submit_job(
     """
     return pbs_submit(
         connection_id,
-        Attribute.make_attrl(attributes, with_op=True),
+        Attribute.make_attrl(attributes, with_op=True, force_op=BatchOperation.SET),
         script,
         destination,
         None,
