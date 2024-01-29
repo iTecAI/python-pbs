@@ -1,8 +1,6 @@
 from enum import Enum
 from typing import Union
 
-from matplotlib.style import available
-
 from ...util.typed_wrapper import BatchOperation
 from .base import BaseAttributeModel, BaseObject, BaseObjectManager, AlterableObject
 from ..models import *

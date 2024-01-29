@@ -89,6 +89,7 @@ class PBS:
         name: str = None,
         attributes: JobSubmission = {},
         output_directory: str = None,
+        alt_user: str = None,
     ) -> JobObject:
         """Submits a script job (ie, a shell file) and returns its status
 
@@ -102,6 +103,8 @@ class PBS:
         :type attributes: JobSubmission, optional
         :param output_directory: Output folder path, defaults to None
         :type output_directory: str, optional
+        :param alt_user: Run as alternate user (provided permissions are available)
+        :type alt_user: str, optional
         :raises PBSException: If job failed to submit
         :return: Initialized job
         :rtype: JobObject
@@ -118,6 +121,9 @@ class PBS:
             )
         if name:
             attributes["job_name"] = name
+
+        if alt_user:
+            attributes["User_List"] = alt_user
         parsed_attrs = [
             Attribute(name=k, value=v, operation=BatchOperation.SET)
             if not "." in k
@@ -143,6 +149,7 @@ class PBS:
         name: str = None,
         attributes: JobSubmission = {},
         output_directory: str = None,
+        alt_user: str = None,
     ) -> JobObject:
         """Submit a command directly to PBS (ie from STDIN)
 
@@ -158,6 +165,8 @@ class PBS:
         :type attributes: JobSubmission, optional
         :param output_directory: Output folder path, defaults to None
         :type output_directory: str, optional
+        :param alt_user: Run as alternate user (provided permissions are available)
+        :type alt_user: str, optional
         :raises PBSException: If job failed to submit
         :return: Initialized job
         :rtype: JobObject
@@ -174,6 +183,9 @@ class PBS:
             )
         if name:
             attributes["job_name"] = name
+
+        if alt_user:
+            attributes["User_List"] = alt_user
         attributes[
             "executable"
         ] = f"<jsdl-hpcpa:Executable>{executable}</jsdl-hpcpa:Executable>"

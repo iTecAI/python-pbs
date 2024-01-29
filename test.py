@@ -5,5 +5,7 @@ from python_pbs.util import *
 
 pbs = PBS()
 print(pbs.server.data)
-print(pbs.queues["s1"].available("dharr"))
-# print(stat_resource(pbs.connection, id="cput"))
+# print(pbs.queues["s1"].available("dharr"))
+pbs.submit_script(
+    "test_script.sh", output_directory="test-out/curl-test", alt_user="dharr"
+)
